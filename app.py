@@ -73,7 +73,7 @@ uploaded_files = st.file_uploader("Appuyez ici pour sélectionner vos photos", a
 if uploaded_files and st.button("Envoyer les photos ✨"):
     with st.spinner("Envoi en cours vers notre album magique..."):
         for file in uploaded_files:
-            file_metadata = {'name': file.name, 'parents': [FOLDER_ID]}
+            file_metadata = {'name': file.name, 'parents': FOLDER_ID}
             media = MediaIoBaseUpload(io.BytesIO(file.getvalue()), mimetype=file.type, resumable=True)
             service.files().create(body=file_metadata, media_body=media, fields='id').execute()
         st.success("Merci ! Vos photos ont été ajoutées avec succès. 🎉")
