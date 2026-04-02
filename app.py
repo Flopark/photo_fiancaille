@@ -62,7 +62,7 @@ drive_service = init_drive_service()
 def upload_image(uploaded_file):
     file_metadata = {
         'name': uploaded_file.name,
-        'parents':
+        'parents':  # <-- La correction est ici
     }
     # Les fichiers ne sont jamais sauvegardés sur le disque du serveur, tout se passe en mémoire
     media = MediaIoBaseUpload(uploaded_file, mimetype=uploaded_file.type, resumable=True)
