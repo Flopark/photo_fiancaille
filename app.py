@@ -4,7 +4,6 @@ Created on Thu Apr  2 15:04:00 2026
 
 @author: march
 """
-
 import streamlit as st
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -22,7 +21,7 @@ hide_streamlit_style = """
     [data-testid="stHeader"] {visibility: hidden;}
     {display: none!important;}
     footer {display: none!important;}
-   .block-container {padding-top: 2rem;}
+  .block-container {padding-top: 2rem;}
     
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&display=swap');
     
@@ -38,7 +37,6 @@ st.title("💍 Galerie de nos Fiançailles")
 st.write("Partagez vos plus beaux souvenirs avec nous et découvrez ceux des autres invités!")
 
 # L'identifiant de votre dossier Drive (extrait de l'URL du dossier)
-# Vous pouvez aussi le placer dans votre fichier secrets.toml
 FOLDER_ID = st.secrets.get("FOLDER_ID", "1j0LKuITFba9ai9cFv2Iuiio9LOeC6OtE")
 
 # ---------------------------------------------------------
@@ -60,9 +58,10 @@ drive_service = init_drive_service()
 # 2. Moteur de téléversement (Upload) des photos
 # ---------------------------------------------------------
 def upload_image(uploaded_file):
+    # CORRECTION ICI : Ajout des crochets et de la variable FOLDER_ID
     file_metadata = {
         'name': uploaded_file.name,
-        'parents':  # <-- La correction est ici
+        'parents': 
     }
     # Les fichiers ne sont jamais sauvegardés sur le disque du serveur, tout se passe en mémoire
     media = MediaIoBaseUpload(uploaded_file, mimetype=uploaded_file.type, resumable=True)
@@ -121,10 +120,12 @@ else:
     cols = st.columns(3)
     for index, file in enumerate(files):
         # Sécurité : traiter uniquement les fichiers de type image
-        if file.startswith('image/'):
+        if file.get('mimeType', '').startswith('image/'):
             image_bytes = download_image(file['id'])
             
             # Distribution équitable dans les différentes colonnes
             col = cols[index % 3]
             # Affichage de l'image ajustée à la largeur de sa colonne
             col.image(image_bytes, use_column_width=True)
+
+
