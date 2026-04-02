@@ -5,6 +5,118 @@ Created on Thu Apr  2 15:04:00 2026
 @author: march
 """
 import streamlit as st
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+import io
+
+# --- CONFIGURATION DE LA PAGE ---
+st.set_page_config(page_title="Nos Fiançailles", page_icon="💍", layout="centered")
+
+# --- THÈME PASTEL (CSS Personnalisé) ---
+st.markdown("""
+<style>
+    /* Couleur de fond pastel et typographie élégante */
+    .stApp {
+        background-color: #fdf6f5; /* Rose poudré très clair */
+        color: #5d4037; /* Marron doux */
+        font-family: 'Georgia', serif;
+    }
+    h1, h2, h3 {
+        color: #d4a373; /* Or/Sable doux */
+        text-align: center;
+        font-family: 'Georgia', serif;
+    }
+    /* Stylisation des boutons */
+    .stButton>button {
+        background-color: #e2cec0;
+        color: #5d4037;
+        border-radius: 20px;
+        border: none;
+        padding: 10px 24px;
+        width: 100%;
+        font-weight: bold;
+    }
+    .stButton>button:hover {
+        background-color: #d4a373;
+        color: white;
+    }
+    /* Contour de la zone de dépôt de fichier */
+    .stFileUploader>div>div {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.title("💍 Bienvenue à nos Fiançailles !")
+st.markdown("<p style='text-align: center;'>Partagez vos clichés et découvrez les plus beaux moments de cette journée</p>", unsafe_allow_html=True)
+
+# --- CONNEXION GOOGLE DRIVE ---
+@st.cache_resource
+def get_drive_service():
+    # Streamlit récupère les identifiants de manière sécurisée
+    creds_dict = st.secrets["gcp_service_account"]
+    creds = service_account.Credentials.from_service_account_info(
+        creds_dict, scopes=['https://www.googleapis.com/auth/drive']
+    )
+    return build('drive', 'v3', credentials=creds)
+
+service = get_drive_service()
+FOLDER_ID = st.secrets["drive"]["folder_id"]
+
+# --- SECTION UPLOAD ---
+st.markdown("---")
+st.header("📸 Ajouter vos photos")
+uploaded_files = st.file_uploader("Appuyez ici pour sélectionner vos photos", accept_multiple_files=True, type=["png", "jpg", "jpeg"])
+
+if uploaded_files and st.button("Envoyer les photos ✨"):
+    with st.spinner("Envoi en cours vers notre album magique..."):
+        for file in uploaded_files:
+            file_metadata = {'name': file.name, 'parents': [FOLDER_ID]}
+            media = MediaIoBaseUpload(io.BytesIO(file.getvalue()), mimetype=file.type, resumable=True)
+            service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        st.success("Merci ! Vos photos ont été ajoutées avec succès. 🎉")
+
+# --- SECTION GALERIE ---
+st.markdown("---")
+st.header("🖼️ Galerie Souvenirs")
+st.markdown("<p style='text-align: center; font-size: 0.9em;'>Appuyez sur le bouton ci-dessous pour voir les photos des autres invités</p>", unsafe_allow_html=True)
+
+if st.button("Charger la galerie 🌸"):
+    with st.spinner("Récupération des photos..."):
+        # Cherche les 30 dernières photos dans le dossier
+        results = service.files().list(
+            q=f"'{FOLDER_ID}' in parents and trashed=false",
+            pageSize=30, fields="nextPageToken, files(id, name)",
+            orderBy="createdTime desc"
+        ).execute()
+        items = results.get('files', [])
+
+        if not items:
+            st.info("La galerie est encore vide. Soyez le premier à ajouter une photo !")
+        else:
+            cols = st.columns(2) # Affiche les photos sur 2 colonnes (idéal sur téléphone)
+            for i, item in enumerate(items):
+                try:
+                    request = service.files().get_media(fileId=item['id'])
+                    downloaded = io.BytesIO(request.execute())
+                    cols[i % 2].image(downloaded, use_container_width=True)
+                except Exception as e:
+                    pass # Ignore les fichiers qui ne seraient pas des images valides
+
+
+
+
+
+
+
+
+
+
+
+
+import streamlit as st
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
