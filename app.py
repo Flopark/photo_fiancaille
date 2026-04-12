@@ -137,4 +137,5 @@ else:
     st.markdown("<p style='text-align:center;'>Galerie indisponible (Drive non configuré)</p>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("""<div class="custom-footer">Avec tout notre amour — Emma & Lucas 💍</div>""", unsafe_allow_html=True)
+st.markdown("""<div class="custom-footer">Avec tout notre amour — Camille & Florian 💍</div>""", unsafe_allow_html=True)
+
