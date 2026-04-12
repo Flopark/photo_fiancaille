@@ -14,7 +14,7 @@ import time
 from datetime import datetime
 
 # --- CONFIGURATION PAGE ---
-st.set_page_config(page_title="Emma & Lucas 💍", page_icon="💍", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Camille & Florian 💍", page_icon="💍", layout="wide", initial_sidebar_state="collapsed")
 
 # --- CSS PASTEL ---
 st.markdown("""
@@ -75,7 +75,7 @@ def list_photos(_service, folder_id):
     return results.get("files", [])
 
 # --- INTERFACE ---
-st.markdown("""<div class="hero"><div class="crown-deco">✦ ✦ ✦</div><h1 class="hero-title">Emma <span>&</span> Lucas</h1><p class="hero-subtitle">Nos fiançailles</p><p class="hero-date">Le 14 juin 2025 · Paris</p></div>""", unsafe_allow_html=True)
+st.markdown("""<div class="hero"><div class="crown-deco">✦ ✦ ✦</div><h1 class="hero-title">Camille <span>&</span> Florian </h1><p class="hero-subtitle">Nos fiançailles</p><p class="hero-date">Le 9 mai 2026 · Paris</p></div>""", unsafe_allow_html=True)
 st.markdown("""<div class="divider"><div class="divider-line"></div><span class="divider-icon">💍</span><div class="divider-line"></div></div>""", unsafe_allow_html=True)
 
 service = get_drive_service()
