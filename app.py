@@ -75,7 +75,7 @@ def list_photos(_service, folder_id):
     return results.get("files", [])
 
 # --- INTERFACE ---
-st.markdown("""<div class="hero"><div class="crown-deco">✦ ✦ ✦</div><h1 class="hero-title">Camille <span>&</span> Florian </h1><p class="hero-subtitle">Nos fiançailles</p><p class="hero-date">Le 9 mai 2026 · Paris</p></div>""", unsafe_allow_html=True)
+st.markdown("""<div class="hero"><div class="crown-deco">✦ ✦ ✦</div><h1 class="hero-title">Camille <span>&</span> Florian </h1><p class="hero-subtitle">Nos fiançailles</p><p class="hero-date">Le 9 mai 2026 · Calais </p></div>""", unsafe_allow_html=True)
 st.markdown("""<div class="divider"><div class="divider-line"></div><span class="divider-icon">💍</span><div class="divider-line"></div></div>""", unsafe_allow_html=True)
 
 service = get_drive_service()
